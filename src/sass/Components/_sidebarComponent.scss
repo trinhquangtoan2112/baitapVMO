@@ -1,0 +1,16 @@
+.sidebar_new {
+    margin: $margin-1 0;
+    a {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        img {
+            @include styleImg($width-2, $height-2);
+        }
+        h5 {
+            width: $width-4;
+        }
+    }
+}

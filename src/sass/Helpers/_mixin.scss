@@ -1,0 +1,11 @@
+@mixin styleImg($width, $height) {
+    width: $width;
+    height: $height;
+    object-fit: cover;
+}
+
+@mixin styleText($fs, $fw, $color) {
+    color: $color;
+    font-size: $fs;
+    font-weight: $fw;
+}

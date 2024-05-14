@@ -1,0 +1,11 @@
+.main_content .content .col-content-center .content_news a img {
+  height: 150px;
+  width: 100%;
+}
+.main_content .content .content_news_right {
+  color: red;
+}
+.main_content .content .content_news_right a {
+  display: flex;
+  flex-direction: row-reverse;
+}/*# sourceMappingURL=ContentComponents.css.map */

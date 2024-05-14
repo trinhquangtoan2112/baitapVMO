@@ -1,0 +1,84 @@
+.reading_content {
+    .reading-title {
+        .main_title {
+            @include styleText($font-size-7, $font-weight-1, $color-black-0);
+            line-height: $font-size-2 + 5;
+        }
+        .sub-title {
+            margin-top: $margin-1 + 10;
+            @include styleText($font-size-5, $font-weight-1, $color-black-0);
+            line-height: $font-size-5;
+        }
+        .content_info {
+            margin-top: $margin-1;
+            @include styleText($font-size-4, $font-weight-2, $color-gray-0);
+        }
+        .img_info {
+            img {
+                @extend %background-img;
+            }
+            p {
+                @include styleText($font-size-4, $font-weight-2, $color-gray-0);
+            }
+        }
+    }
+    .reading_content {
+        p {
+            @include styleText($font-size-4 + 5, $font-weight-2, $color-black-0);
+        }
+        .reading_content_img {
+            margin: $margin-1 0;
+            border-top: 1px solid $color-gray-1;
+            border-bottom: 1px solid $color-gray-1;
+            padding: 10px 0;
+        }
+    }
+    .commentcompoments {
+        h5 {
+            border-top: 3px solid $color-red-0;
+            @include styleText($font-size-5, $font-weight-1, $color-black-0);
+        }
+        form {
+            input {
+                margin: $margin-1 0;
+                padding: $padding-1;
+                height: 40%;
+                width: 100%;
+                border: 1px solid $color-blue-1;
+            }
+            button {
+                background-color: $color-red-0;
+                padding: $padding-1;
+                color: $color-white-0;
+                transition: all 0.5s;
+                &:hover {
+                    background-color: $color-white-0;
+                    color: $color-red-0;
+                    border: 1px solid $color-red-0;
+                }
+            }
+        }
+        p:nth-child(3) {
+            @include styleText($font-size-4, $font-weight-1, $color-black-0);
+        }
+        .comment_content {
+            margin-top: $margin-1;
+
+            .comment_contetn_info {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                h4 {
+                    font-weight: $font-weight-1;    
+                }
+                p {
+                    @include styleText($font-size-4, $font-weight-2, $color-gray-2);
+                }
+            }
+            .content_main {
+                width: 100%;
+                margin: 0 auto;
+            }
+        }
+    }
+}
