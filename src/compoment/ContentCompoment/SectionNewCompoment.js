@@ -1,59 +1,59 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-export default function SectionNewCompoment() {
-    let textTest = "Transfer Talk: Europa League exit edges Kai Havertz closer to Chelsea move es Kai Havertz closer to Chelsea move"
-    const testDemo = () => {
+export default function SectionNewCompoment(props) {
+    const { sectionComponents } = props;
+
+    const color = "orange"
+    const testDemo = (textTest) => {
+
         if (textTest.length > 75) {
-            textTest = textTest.slice(0, 75) + "...";
+            textTest = textTest.slice(0, 60) + "...";
+            return textTest;
+        } else {
+            return textTest;
         }
     }
-    testDemo()
-    return (
-        <div className='section_new'>
-            <NavLink>Sports</NavLink>
-            <div className='section_content flex flex-row justify-between flex-wrap'>
-                <div className='section_news'>
-                    <NavLink>
-                        <img src='https://cdn3.ivivu.com/2015/05/deo-viet-nam-ivivu.com-1.jpg' alt='124'></img>
-                        <h5>{textTest}</h5>
-                        <p>Author: Trinh Quang Toan</p>
-                    </NavLink>
 
-                </div>
-                <div className='section_news'>
-                    <NavLink>
-                        <img src='https://cdn3.ivivu.com/2015/05/deo-viet-nam-ivivu.com-1.jpg' alt='124'></img>
-                        <h5>Transfer Talk: Europa League exit edges Kai Havertz closer to Chelsea move</h5>
-                        <p>Author: Trinh Quang Toan</p>
-                    </NavLink>
+    const renderSection = () => {
+        return sectionComponents.map((item, index) => {
 
-                </div>
-                <div className='section_news'>
-                    <NavLink>
-                        <img src='https://cdn3.ivivu.com/2015/05/deo-viet-nam-ivivu.com-1.jpg' alt='124'></img>
-                        <h5>Transfer Talk: Europa League exit edges Kai Havertz closer to Chelsea move</h5>
-                        <p>Author: Trinh Quang Toan</p>
-                    </NavLink>
 
-                </div>
-                <div className='section_news'>
-                    <NavLink>
-                        <img src='https://cdn3.ivivu.com/2015/05/deo-viet-nam-ivivu.com-1.jpg' alt='124'></img>
-                        <h5>Transfer Talk: Europa League exit edges Kai Havertz closer to Chelsea move</h5>
-                        <p>Author: Trinh Quang Toan</p>
-                    </NavLink>
+            return <div className='section_new' key={index}>
+                <NavLink to={``} style={{ borderLeft: `4px solid ${color}` }}>{item[0].sectionName}</NavLink>
+                <div className='section_content flex flex-row  flex-wrap'>
 
-                </div>
-                <div className='section_news'>
-                    <NavLink>
-                        <img src='https://cdn3.ivivu.com/2015/05/deo-viet-nam-ivivu.com-1.jpg' alt='124'></img>
-                        <h5>Transfer Talk: Europa League exit edges Kai Havertz closer to Chelsea move</h5>
-                        <p>Author: Trinh Quang Toan</p>
-                    </NavLink>
+                    {item.map((item1, index1) => {
+                        if (item1?.elements && item1?.elements !== undefined && item1?.elements !== "") {
+
+                            return <div className='section_news' key={index1}>
+                                <NavLink to={`/reading/${item1.id}`}>
+                                    <img src={item1?.elements[0]?.assets[0]?.file ? item1?.elements[0]?.assets[0]?.file : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTJiiwPeAByqPq0xaaE8py0UGtCpqot0U1rIb7mqwCAA&s"} alt={item1?.elements[0]?.assets[0]?.typeData?.altText ? item1?.elements[0]?.assets[0]?.typeData?.altText : "Newest new from us"}></img>
+                                    <h5>{testDemo(item1.webTitle)}</h5>
+                                    <p>Author: {item1?.fields?.byline}</p>
+                                </NavLink>
+                            </div>
+                        }
+                        else {
+                            return <div className='section_news' key={index1}>
+                                <NavLink to={`/reading/${item1.id}`}>
+                                    <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTJiiwPeAByqPq0xaaE8py0UGtCpqot0U1rIb7mqwCAA&s"} alt={"Newest new from us"}></img>
+                                    <h5>{testDemo(item1.webTitle)}</h5>
+                                    <p>Author: {item1?.fields?.byline}</p>
+                                </NavLink>
+                            </div>
+                        }
+
+                    })}
+
 
                 </div>
             </div>
-        </div>
+        })
+    }
+    return (
+        <>
+            {renderSection()}
+        </>
     )
 }

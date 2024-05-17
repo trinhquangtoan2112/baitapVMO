@@ -1,15 +1,30 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
-export default function SidebarNewsComponent() {
+export default function SidebarNewsComponent(props) {
+    const { item } = props;
+    const renderSidebar = () => {
+        if (item?.elements && item?.elements !== undefined && item?.elements !== "") {
+            return <div className='sidebar_new'>
+                <NavLink to={`${item.id}`}>
+                    <img src={item.elements[0]?.assets[0].file ? item.elements[0]?.assets[0].file : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTJiiwPeAByqPq0xaaE8py0UGtCpqot0U1rIb7mqwCAA&s"} alt={item.elements[0]?.assets[0].typeData.altText ? item.elements[0]?.assets[0].typeData.altText : "Newest new from us"}></img>
+                    <h5>{item.webTitle}</h5>
+                </NavLink>
+            </div>
+        }
+        else {
+            return <div className='sidebar_new'>
+                <NavLink to={`${item.id}`}>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTJiiwPeAByqPq0xaaE8py0UGtCpqot0U1rIb7mqwCAA&s" alt="Newest new from us"></img>
+                    <h5>{item.webTitle} </h5>
+                </NavLink>
+            </div>
+        }
+
+    }
     return (
 
-        <div className='sidebar_new'>
-            <NavLink href='https://i1-vnexpress.vnecdn.net/2024/05/08/AurusSenat20251-1715139859-4891-1715140063.jpg?w=500&h=300&q=100&dpr=2&fit=crop&s=C5eek_Zd2XWOs_p7fckQ8g'>
-                <img src='https://i1-vnexpress.vnecdn.net/2024/05/08/AurusSenat20251-1715139859-4891-1715140063.jpg?w=500&h=300&q=100&dpr=2&fit=crop&s=C5eek_Zd2XWOs_p7fckQ8g' alt='sass'></img>
-                <h5>Train strikes halt most services in west of England, Midlands and routes to Scotland and Wales – business live</h5>
-            </NavLink>
-        </div>
+        <>{renderSidebar()}</>
 
     )
 }

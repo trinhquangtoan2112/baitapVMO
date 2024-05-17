@@ -1,22 +1,30 @@
-import React, { useEffect } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
-import HomePage from '../../pages/HomePages/HomePage'
-import ReadingPages from '../../pages/ReadingPages/ReadingPages'
-import { apiKey } from '../../service/http'
+import { getAuth, onAuthStateChanged, sign, signOut } from 'firebase/auth';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, Outlet, useParams } from 'react-router-dom'
+import { showLoginForm, signOutDettail } from '../../store/Reducer/UserReducer';
+import { Database, getDatabase } from 'firebase/database';
+
 
 export default function Homelayout() {
-    useEffect(() => {
-        // const getApiTest = async () => {
-        //     const result = await apiKey.get("us-news/article/2024/may/09/trump-trial-stormy-daniels-continue-testimony",
-        //         {
-        //             'show-blocks': 'all',
-        //             'show-fields': 'trailText,byline'
-        //         }
-        //     )
-        //     console.log(result, "424122142")
-        // }
-        // getApiTest();
-    }, [])
+    const detail = useSelector(state => state.UserReducer.userDetail);
+    const params = useParams();
+    const dispatch = useDispatch()
+    const { section } = params;
+    const database = getDatabase();
+    console.log(database)
+    const auth = getAuth()
+    const signOutUser = () => {
+        signOut(auth).then(() => {
+            console.log('sign out sucess')
+            dispatch(signOutDettail())
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+    const showForm = () => {
+        dispatch(showLoginForm())
+    }
     return (
         <div className='home_main'>
             <section className='header'>
@@ -26,20 +34,30 @@ export default function Homelayout() {
                 <div className='tag_content'>
                     <hr></hr>
                     <ul className='tag_main'>
-                        <li className='active'><NavLink to={"/home"}>Home</NavLink></li>
-                        <li><NavLink to={"/sport"}>Sport</NavLink></li>
-                        <li><NavLink to={"/world"}>World</NavLink></li>
-                        <li><NavLink to={"/politics"}>Politics</NavLink></li>
-                        <li><NavLink to={"/society"}>Society</NavLink></li>
-                        <li><NavLink to={"/culture"}>Culture</NavLink></li>
-                        <li><NavLink to={"/lifeandstyle"}>Life and style</NavLink></li>
+                        <li className={section === undefined ? "active" : ""}><NavLink to={""}>Home</NavLink></li>
+                        <li className={section === "sport" ? "active" : ""}><NavLink to={"/content/sport"}>Sport</NavLink></li>
+                        <li className={section === "world" ? "active" : ""}><NavLink to={"/content/world"}>World</NavLink></li>
+                        <li className={section === "politics" ? "active" : ""}><NavLink to={"/content/politics"}>Politics</NavLink></li>
+                        <li className={section === "society" ? "active" : ""}><NavLink to={"/content/society"}>Society</NavLink></li>
+                        <li className={section === "culture" ? "active" : ""}><NavLink to={"/content/culture"}>Culture</NavLink></li>
+                        <li className={section === "lifeandstyle" ? "active" : ""}><NavLink to={"/content/lifeandstyle"}>Life and style</NavLink></li>
                     </ul>
+                </div>
+                <div className='login w-11/12 text-right mx-auto cursor-pointer' >
+                    <NavLink>
+                        {detail?.email ? <> <span>{detail.email}</span> <button onClick={() => {
+                            signOutUser()
+                        }}>Sign Out</button> </> : <p onClick={() => {
+                            showForm()
+                        }}>Sign in<i className="fa fa-user" />
+                        </p>}
+
+                    </NavLink>
                 </div>
             </section>
             <div className='w-11/12 mx-auto h-2/6'>
-                <HomePage></HomePage>
+                <Outlet></Outlet>
             </div>
-
             <section className='footer'>
                 <hr>
                 </hr>
@@ -52,24 +70,22 @@ export default function Homelayout() {
                             <h4>Our main content</h4>
                             <div className='footer_center_content'>
                                 <ul >
-                                    <li className='active'><NavLink to={"/home"}>Home</NavLink></li>
-                                    <li><NavLink to={"/sport"}>Sport</NavLink></li>
+                                    <li className={section === undefined ? "active" : ""}><NavLink to={""}>Home</NavLink></li>
+                                    <li className={section === "sport" ? "active" : ""}><NavLink to={"/content/sport"}>Sport</NavLink></li>
                                 </ul>
                                 <ul >
-                                    <li><NavLink to={"/world"}>World</NavLink></li>
-                                    <li><NavLink to={"/politics"}>Politics</NavLink></li>
+                                    <li className={section === "world" ? "active" : ""}><NavLink to={"/content/world"}>World</NavLink></li>
+                                    <li className={section === "politics" ? "active" : ""}><NavLink to={"/content/politics"}>Politics</NavLink></li>
                                 </ul>
                                 <ul >
-                                    <li><NavLink to={"/society"}>Society</NavLink></li>
-                                    <li><NavLink to={"/culture"}>Culture</NavLink></li>
+                                    <li className={section === "society" ? "active" : ""}><NavLink to={"/content/society"}>Society</NavLink></li>
+                                    <li className={section === "culture" ? "active" : ""}><NavLink to={"/content/culture"}>Culture</NavLink></li>
                                 </ul>
-                                <ul className=''>
-                                    <li><NavLink to={"/lifeandstyle"}>Life and style</NavLink></li>
+                                <ul >
+                                    <li className={section === "lifeandstyle" ? "active" : ""}><NavLink to={"/content/lifeandstyle"}>Life and style</NavLink></li>
                                 </ul>
                             </div>
-
                         </div>
-
                         <div className='footer_center_info'>
                             <h4>Follow us on social network</h4>
                             <div className='footer_info_social'>
@@ -96,8 +112,6 @@ export default function Homelayout() {
                             </div>
                         </div>
                     </div>
-
-
                 </div>
                 <hr></hr>
                 <div className='footer_bottom'>

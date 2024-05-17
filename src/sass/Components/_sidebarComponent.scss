@@ -12,5 +12,11 @@
         h5 {
             width: $width-4;
         }
+        transition: all 0.5s;
+        &:hover {
+            h5 {
+                color: $color-blue-0;
+            }
+        }
     }
 }
