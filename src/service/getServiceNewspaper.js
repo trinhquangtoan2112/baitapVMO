@@ -1,31 +1,39 @@
 import { apiKey } from './http';
 
-export const getNewsForHomePage = () => {
+export const getNewsForHomePage = async () => {
 
-    return apiKey.get("search", {
+    return await apiKey.get("search", {
         'page-size': 150,
         'show-fields': 'trailText,byline',
         'show-elements': 'image'
     })
 }
+export const searchFromKeyWord = async (value) => {
 
-export const getContentNewFromID = (id) => {
-    return apiKey.get(`${id}`, {
+    return await apiKey.get("search", {
+        'q': value,
+        'page-size': 40,
+        'show-fields': 'trailText,byline',
+        'show-elements': 'image'
+    })
+}
+export const getContentNewFromID = async (id) => {
+    return await apiKey.get(`${id}`, {
         'show-fields': 'trailText,byline',
         'show-blocks': 'all'
     })
 }
-export const getSectionFromID = (id) => {
-    return apiKey.get(`${id}`, {
+export const getSectionFromID = async (id) => {
+    return await apiKey.get(`${id}`, {
         'show-fields': 'trailText,byline',
-        'page-size': 15,
+        'page-size': 10,
         'show-elements': "image"
     })
 }
-export const getNewsPaperFromSection = (url) => {
-    return apiKey.get(`${url}`, {
+export const getNewsPaperFromSection = async (url) => {
+    return await apiKey.get(`${url}`, {
         'show-fields': 'trailText,byline',
-        'page-size': 20,
+        'page-size': 50,
         'show-elements': "image"
     })
 }

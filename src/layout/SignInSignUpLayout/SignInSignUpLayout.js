@@ -4,43 +4,41 @@ import Tabs from 'react-bootstrap/Tabs';
 import SignInComponents from '../../compoment/SignInComponents/SignInComponents';
 import SignUpComponents from '../../compoment/SignUpComponents/SignUpComponents';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getUserDetail } from '../../store/Reducer/UserReducer';
+import { getUserDetail, getUserFromLocalStorage } from '../../store/Reducer/UserReducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase';
 
 export default function SignInSignUpLayout() {
     const hidden = useSelector(state => state.UserReducer.userLogin);
-
+    let userInformation = localStorage.getItem("userDetail");
     const auth = getAuth()
     const dispatch = useDispatch()
     const listen = async () => {
-        if (auth?.currentUser) {
-
-            await dispatch(getUserDetail(auth?.currentUser?.reloadUserInfo));
-        } else {
-            setTimeout(() => {
-                if (auth?.currentUser) {
-                    dispatch(getUserDetail(auth?.currentUser?.reloadUserInfo));
-                }
-            }, 500)
-
+        if (userInformation != null && userInformation !== undefined && userInformation !== "") {
+            userInformation = JSON.parse(userInformation)
+            await dispatch(getUserFromLocalStorage(userInformation));
         }
     }
+    const user123 = collection(db, "UserDetail");
     const getDatabase = async () => {
+        try {
+            const data = await getDocs(user123)
+            const filter = data.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id
+
+            }))
+        } catch (error) {
+            console.log(error)
+        }
 
     }
     useEffect(() => {
-
+        getDatabase();
+        listen()
     }, [])
-    useEffect(() => {
 
-        if (auth) {
-            listen()
-        } else {
-            dispatch(getUserDetail());
-        }
-
-
-    }, [auth])
     return (
         <div className={`loginn_form ${hidden ? "" : "hideen"}`}>
 

@@ -2,26 +2,33 @@ import React, { useEffect, useState } from 'react'
 import ContentCompoment from '../../compoment/ContentCompoment/ContentCompoment'
 import SectionNewCompoment from '../../compoment/ContentCompoment/SectionNewCompoment'
 import { getNewsForHomePage } from '../../service/getServiceNewspaper';
+import { useDispatch } from 'react-redux';
+import { getLoading, hideLoading } from '../../store/Reducer/LoadingReducer';
 
 export default function HomePage() {
     let result;
 
-
+    const dispatch = useDispatch();
     let objectKey = {};
     const [content, setContent] = useState();
     const [newArray, setNewArray] = useState();
     const [sectionComponents1, setsectionComponents] = useState();
     useEffect(() => {
         const getNews = async () => {
+            dispatch(getLoading())
             result = await getNewsForHomePage();
             setContent(result.data.response.results.slice(0, 7));
             setNewArray(result.data.response.results.slice(6));
+            dispatch(hideLoading())
+
         }
         getNews()
     }, []);
     useEffect(() => {
+
         renderTopSport()
         renderSectionNew()
+
     }, [newArray])
     const renderTopSport = async () => {
         await newArray?.map((item, index) => {

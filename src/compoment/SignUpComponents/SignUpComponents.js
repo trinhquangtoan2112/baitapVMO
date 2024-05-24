@@ -2,21 +2,26 @@ import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } f
 import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { hideLoginForm } from '../../store/Reducer/UserReducer';
+import { collection, getDocs, limit, query } from 'firebase/firestore';
+import App from './../../App';
+
 export default function SignUpComponents() {
 
     const [email, setEmail] = useState();
 
     const [passwork, setPasswork] = useState();
-    const check = (e) => {
+    const check = async (e) => {
         e.preventDefault();
         createUserWithEmailAndPassword(auth, email, passwork).then((userCredential) => {
 
         }).catch((error) => {
             console.log(error);
         });
+
+
     }
     const dispatch = useDispatch()
     const hideForm = () => {

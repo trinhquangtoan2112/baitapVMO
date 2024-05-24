@@ -11,16 +11,14 @@ export default function Homelayout() {
     const params = useParams();
     const dispatch = useDispatch()
     const { section } = params;
-    const database = getDatabase();
-    console.log(database)
     const auth = getAuth()
     const signOutUser = () => {
         signOut(auth).then(() => {
-            console.log('sign out sucess')
             dispatch(signOutDettail())
         }).catch((err) => {
             console.log(err);
         })
+        localStorage.removeItem('userDetail');
     }
     const showForm = () => {
         dispatch(showLoginForm())
@@ -43,9 +41,10 @@ export default function Homelayout() {
                         <li className={section === "lifeandstyle" ? "active" : ""}><NavLink to={"/content/lifeandstyle"}>Life and style</NavLink></li>
                     </ul>
                 </div>
-                <div className='login w-11/12 text-right mx-auto cursor-pointer' >
-                    <NavLink>
-                        {detail?.email ? <> <span>{detail.email}</span> <button onClick={() => {
+                <div className='login w-11/12 mx-auto text-right' >
+                    <NavLink className={"cursor-pointer"} to={"/searching"} >Seach</NavLink>
+                    <NavLink className={"cursor-pointer"}>
+                        {detail?.email ? <> <NavLink to={"/detail"}>{detail.email}</NavLink> <button onClick={() => {
                             signOutUser()
                         }}>Sign Out</button> </> : <p onClick={() => {
                             showForm()

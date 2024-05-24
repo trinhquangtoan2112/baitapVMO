@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { getNewsPaperFromSection } from '../../service/getServiceNewspaper';
+import { useDispatch } from 'react-redux';
+import { getLoading, hideLoading } from '../../store/Reducer/LoadingReducer';
 
 export default function SectionTypeComponents() {
     const params = useParams();
-    const { section } = params;
+    let { section } = params;
     const [newsSection, setNewsSection] = useState();
     const getData = async () => {
         const result = await getNewsPaperFromSection(section);
 
         setNewsSection(result.data.response)
     }
+    const dispatch = useDispatch();
     useEffect(() => {
+
+        dispatch(getLoading())
         getData()
+        setTimeout(() => {
+            dispatch(hideLoading())
+        }, 3000);
+
     }, [section])
     const testDemo = (textTest) => {
         if (textTest.length > 75) {

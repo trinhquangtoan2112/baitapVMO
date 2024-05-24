@@ -4,37 +4,35 @@ import ReadingCompoment from '../../compoment/ContentCompoment/ReadingCompoment'
 import SidebarNewsComponent from '../../compoment/ContentCompoment/SidebarNewsComponent';
 import { useLocation } from 'react-router-dom';
 import { getContentNewFromID, getSectionFromID } from '../../service/getServiceNewspaper';
+import { useDispatch } from 'react-redux';
+import { getLoading, hideLoading } from '../../store/Reducer/LoadingReducer';
 export default function ReadingPages() {
     const [contentNew, setContentNew] = useState()
     const [sectionID, setSectionID] = useState()
     const location = useLocation();
-
+    const dispatch = useDispatch();
     const fullPath = location.pathname.replace('/reading/', '');
-    useEffect(() => {
-        const getReadingTitle = async () => {
-            try {
-                let result = await getContentNewFromID(fullPath);
-                await setContentNew(result)
-                let sectionID = await getSectionFromID(result?.data.response.content.sectionId)
-                setSectionID(sectionID)
-            } catch (error) {
-                console.log(error)
-            }
+    const getReadingTitle = async () => {
+        try {
+            dispatch(getLoading())
+            let result = await getContentNewFromID(fullPath);
+            await setContentNew(result)
+            let sectionID = await getSectionFromID(result?.data.response.content.sectionId)
+            setSectionID(sectionID)
+            dispatch(hideLoading())
+        } catch (error) {
+            console.log(error)
         }
+    }
+    useEffect(() => {
+
         getReadingTitle()
+
     }, [])
     useEffect(() => {
-        const getReadingTitle = async () => {
-            try {
-                let result = await getContentNewFromID(fullPath);
-                await setContentNew(result)
-                let sectionID = await getSectionFromID(result?.data.response.content.sectionId)
-                setSectionID(sectionID)
-            } catch (error) {
-                console.log(error)
-            }
-        }
+
         getReadingTitle()
+
     }, [fullPath])
     const renderAd = () => {
         return sectionID?.data.response.results.map((item, index) => {
@@ -45,10 +43,10 @@ export default function ReadingPages() {
     return (
         <div className='reading-pages flex flex-row w-4/5 mx-auto mt-4 justify-around'>
             <div className='reading_center basis-7/12'>
-                {contentNew ? <ReadingCompoment contentNew={contentNew}></ReadingCompoment> : <p></p>}
+                {contentNew ? <ReadingCompoment contentNew={contentNew} pathName={fullPath}></ReadingCompoment> : <p></p>}
 
             </div>
-            <div className='reading-right basis-4/12'>
+            <div className='reading-right basis-3/12'>
                 <h4>Top {sectionID?.data.response.section.webTitle} from us</h4>
 
                 {renderAd()}

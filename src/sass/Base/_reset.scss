@@ -1,0 +1,10 @@
+.form {
+    position: relative;
+    .fa-search {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 20px;
+        color: #9ca3af;
+    }
+}

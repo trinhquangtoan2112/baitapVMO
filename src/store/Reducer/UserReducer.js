@@ -14,10 +14,17 @@ export const userReducer = createSlice({
             state.userDetail = action.payload
             state.userLogin = false;
             state.hasUser = true;
+            localStorage.setItem('userDetail', JSON.stringify(action.payload));
         },
         signOutDettail: (state) => {
             state.userDetail = [];
             state.hasUser = false;
+        },
+        getUserFromLocalStorage: (state, action) => {
+            state.userDetail = action.payload
+            state.userLogin = false;
+            state.hasUser = true;
+
         },
         showLoginForm: (state) => {
             state.userLogin = true;
@@ -29,6 +36,6 @@ export const userReducer = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { getUserDetail, signOutDettail, showLoginForm, hideLoginForm } = userReducer.actions
+export const { getUserDetail, signOutDettail, showLoginForm, hideLoginForm, getUserFromLocalStorage } = userReducer.actions
 
 export default userReducer.reducer

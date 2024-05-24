@@ -15,7 +15,6 @@ export default function SignInComponents() {
         signInWithEmailAndPassword(auth, email, passwork).then((userCredential) => {
             console.log(userCredential, "userCredential")
             dispatch(getUserDetail(auth?.currentUser?.reloadUserInfo));
-
         }).catch((error) => {
 
         });

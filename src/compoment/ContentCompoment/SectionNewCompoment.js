@@ -17,12 +17,9 @@ export default function SectionNewCompoment(props) {
 
     const renderSection = () => {
         return sectionComponents.map((item, index) => {
-
-
             return <div className='section_new' key={index}>
-                <NavLink to={``} style={{ borderLeft: `4px solid ${color}` }}>{item[0].sectionName}</NavLink>
+                <NavLink style={{ borderLeft: `4px solid ${color}` }}>{item[0].sectionName}</NavLink>
                 <div className='section_content flex flex-row  flex-wrap'>
-
                     {item.map((item1, index1) => {
                         if (item1?.elements && item1?.elements !== undefined && item1?.elements !== "") {
 
@@ -45,8 +42,6 @@ export default function SectionNewCompoment(props) {
                         }
 
                     })}
-
-
                 </div>
             </div>
         })
