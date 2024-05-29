@@ -30,7 +30,7 @@ export default function SignInSignUpLayout() {
 
             }))
         } catch (error) {
-            console.log(error)
+
         }
 
     }

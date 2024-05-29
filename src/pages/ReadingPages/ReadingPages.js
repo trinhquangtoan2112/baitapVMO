@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { getContentNewFromID, getSectionFromID } from '../../service/getServiceNewspaper';
 import { useDispatch } from 'react-redux';
 import { getLoading, hideLoading } from '../../store/Reducer/LoadingReducer';
+import { message } from 'antd';
 export default function ReadingPages() {
     const [contentNew, setContentNew] = useState()
     const [sectionID, setSectionID] = useState()
@@ -15,13 +16,18 @@ export default function ReadingPages() {
     const getReadingTitle = async () => {
         try {
             dispatch(getLoading())
-            let result = await getContentNewFromID(fullPath);
-            await setContentNew(result)
-            let sectionID = await getSectionFromID(result?.data.response.content.sectionId)
-            setSectionID(sectionID)
+            try {
+                let result = await getContentNewFromID(fullPath);
+                await setContentNew(result)
+                let sectionID = await getSectionFromID(result?.data.response.content.sectionId)
+                setSectionID(sectionID)
+            } catch (error) {
+                message.error("Something wrong here")
+            }
+
             dispatch(hideLoading())
         } catch (error) {
-            console.log(error)
+
         }
     }
     useEffect(() => {

@@ -7,7 +7,7 @@ export default function LoadingComponent() {
     useEffect(() => {
         setLoaidng(loading)
     }, [loading])
-    console.log(loading, "loading")
+
     return (
         <>
             {loading1 ? <div className='loading_gif'>

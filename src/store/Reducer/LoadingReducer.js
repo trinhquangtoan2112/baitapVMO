@@ -9,11 +9,11 @@ const LoadingReducer = createSlice({
     initialState,
     reducers: {
         getLoading: (state) => {
-            console.log("true")
+
             state.loading = true;
         },
         hideLoading: (state) => {
-            console.log("hide")
+
             state.loading = false;
 
         }

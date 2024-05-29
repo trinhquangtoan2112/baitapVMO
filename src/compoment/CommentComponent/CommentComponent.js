@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { showLoginForm } from '../../store/Reducer/UserReducer';
 import { addDoc, collection, deleteDoc, doc, getDocs, limit, query, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db, realtimeDb } from '../../firebase';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -10,13 +10,12 @@ import dayjs from 'dayjs';
 import parse from 'html-react-parser';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { update } from 'firebase/database';
+import { child, get, getDatabase, onValue, ref, remove, set, update } from 'firebase/database';
+import { message } from 'antd';
 
 export default function CommentComponent(props) {
-
     let { pathName } = props;
     pathName = pathName.replace(/\//g, "`")
-
     useEffect(() => {
         checkComment()
     }, [])
@@ -41,60 +40,96 @@ export default function CommentComponent(props) {
     const showForm = () => {
         dispatch(showLoginForm())
     }
-
     const checkComment = async () => {
-        const subCollection = collection(db, "commentID", `${pathName}`, `${pathName}`);
-        const testq = query(subCollection, limit(5));
-        const querySnapshotq = await getDocs(testq);
-        console.log(querySnapshotq)
-        if (querySnapshotq._snapshot.docChanges[0] === undefined) {
-            setComment()
-            //  const testCollection = collection(db, "commentID", `${pathName}`, `${pathName}`);
-            // addDoc(testCollection, {
-            //     comment: "sfafasfsfsasf",
-            //     dateTime: "18h 30/01/2002"
-            // })
+
+
+    }
+    const comment1 = useRef();
+
+    const lengthRef = useRef();
+
+    const starCountRef = ref(realtimeDb, `commentID/${pathName}`);
+    onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data === null || data === undefined) {
+            lengthRef.current = 0;
 
         } else {
-            setComment(querySnapshotq._snapshot.docChanges)
+            const filteredData = Object.values(data).filter(val => val !== null && val !== undefined);
+            const keys = Object.keys(data);
+            const lastKey = keys[keys.length - 1];
+            const lastCommentId = data[lastKey].idComment;
+            lengthRef.current = lastCommentId
+            comment1.current = filteredData
+            if (filteredData === comment) {
+
+            } else {
+                const strValue1 = JSON.stringify(filteredData);
+                const strValue2 = JSON.stringify(comment);
+                if (strValue1 !== strValue2) {
+                    setComment(filteredData);
+                }
+            }
+
+
+
         }
-    }
+    });
     const submitComment = async (e) => {
         e.preventDefault();
-        const testCollection = collection(db, "commentID", `${pathName}`, `${pathName}`);
-        if (commentDetail !== undefined) {
-            await addDoc(testCollection, {
-                comment: commentDetail,
-                dateTime: date,
-                idUser: userDetail?.localId,
-                name: userDetail?.email
-            }).then((data) => {
-                checkComment()
-                setCkValue("")
 
-                setTimeout(() => {
-                    setCkValue(true)
-                }, 1);
+        const db1 = getDatabase();
+        set(ref(db1, `commentID/${pathName}/${lengthRef.current + 1}`), {
+            comment: commentDetail,
+            dateTime: date,
+            idUser: userDetail?.localId,
+            name: userDetail?.email,
+            idComment: lengthRef.current + 1
+        }).then(() => {
+            checkComment()
+            setCkValue("")
+            setTimeout(() => {
+                setCkValue(true)
+            }, 1);
+            message.success("Commet complete")
+        }).catch(() => {
+            message.success("Comment error")
+        });
+        // const testCollection = collection(db, "commentID", `${pathName}`, `${pathName}`);
+        // if (commentDetail !== undefined) {
+        //     await addDoc(testCollection, {
+        //         comment: commentDetail,
+        //         dateTime: date,
+        //         idUser: userDetail?.localId,
+        //         name: userDetail?.email
+        //     }).then((data) => {
+        //         checkComment()
+        //         setCkValue("")
+
+        //         setTimeout(() => {
+        //             setCkValue(true)
+        //         }, 1);
 
 
-            }).catch((err) => {
-                console.log(err);
-            })
-        }
+        //     }).catch((err) => {
+        //     })
+        // }
     }
     const handleEditClick = (item) => {
-        setEditingComment(item.doc.key.path.segments[item.doc.key.path.segments.length - 1]);
-        setEditedContent(item.doc.data.value.mapValue.fields.comment.stringValue);
+
+        setEditingComment(item.idComment);
+        setEditedContent(item.comment);
     };
+
     const renderComment = () => {
         return comment?.map((item, index) => {
-            const commentId = item.doc.key.path.segments[item.doc.key.path.segments.length - 1];
-            const isEditing = editingComment === commentId;
 
+            const commentId = item.idComment;
+            const isEditing = editingComment === commentId;
             return <div className='comment_content mb-2' key={index}>
                 <div className='comment_contetn_info'>
-                    <h4 className='comment_userName'>{item.doc.data.value.mapValue.fields.name.stringValue}</h4>
-                    <p>Date time {item.doc.data.value.mapValue.fields.dateTime.stringValue}</p>
+                    <h4 className='comment_userName'>{item.name}</h4>
+                    <p>Date time {item.dateTime}</p>
                 </div>
                 <p className='content_main'>
                     {isEditing ? (
@@ -114,10 +149,10 @@ export default function CommentComponent(props) {
                             }}
                         />
                     ) : (
-                        parse(item.doc.data.value.mapValue.fields.comment.stringValue)
+                        parse(item.comment)
                     )}
                 </p>
-                {item.doc.data.value.mapValue.fields.idUser.stringValue === userDetail?.localId ? <>
+                {item.idUser === userDetail?.localId ? <>
                     {isEditing ? (
                         <button className=' border-2 hover:border-2 border-blue-500 px-4 py-1 bg-blue-500 transition-all text-yellow-50 hover:bg-white  hover:text-blue-500  ' onClick={() => {
                             editComment(item)
@@ -127,40 +162,111 @@ export default function CommentComponent(props) {
                             handleEditClick(item)
                         }}>Edit</button>
                     )}
-
-
                     <button className=' border-2 border-blue-100   px-4 py-1  transition-all text-blue-500 hover:bg-blue-500 hover:text-white ml-3  ' onClick={() => {
                         handleShow()
-                        setIdComment(item.doc.key.path.segments[item.doc.key.path.segments.length - 1])
+                        setIdComment(item.idComment)
                     }}>Xóa</button></> : <></>}
             </div>
         })
 
     }
     const deleteComment = async () => {
-        const testCollection = doc(db, "commentID", `${pathName}`, `${pathName}`, `${idComment}`);
-        await deleteDoc(testCollection).then((data) => {
-            handleClose()
-            checkComment();
-            setEditingComment(null)
-        }).catch((err) => { console.log(err) })
-    }
-    const editComment = async () => {
-        const testCollection = doc(db, "commentID", `${pathName}`, `${pathName}`, `${editingComment}`);
-        if (editedContent !== undefined && editedContent !== "") {
-            await updateDoc(testCollection, {
-                comment: editedContent,
-                dateTime: date,
-            }).then((data) => {
-                checkComment();
+        // const testCollection = doc(db, "commentID", `${pathName}`, `${pathName}`, `${idComment}`);
+        // await deleteDoc(testCollection).then((data) => {
+        //    
+        //     checkComment();
+        //     
+        // }).catch((err) => { })
+
+        const db1 = getDatabase();
+        remove(ref(db1, `commentID/${pathName}/${idComment}`), {
+        })
+            .then(() => {
+                message.success("Delete complete")
                 setEditingComment(null)
-            }).catch((err) => { console.log(err) })
-        }
+                handleClose()
+                onValue(starCountRef, (snapshot) => {
+
+                    const data = snapshot.val();
+                    if (data === null || data === undefined) {
+                        setComment(null);
+                    } else {
+                        const filteredData = Object.values(data).filter(val => val !== null && val !== undefined);
+                        const keys = Object.keys(data);
+                        const lastKey = keys[keys.length - 1];
+                        const lastCommentId = data[lastKey].idComment;
+                        lengthRef.current = lastCommentId
+                        comment1.current = filteredData
+                        if (filteredData === comment) {
+
+                        } else {
+                            const strValue1 = JSON.stringify(filteredData);
+                            const strValue2 = JSON.stringify(comment);
+                            if (strValue1 !== strValue2) {
+                                setComment(filteredData);
+                            }
+                        }
+
+
+
+                    }
+                });
+            })
+            .catch((error) => {
+                message.error("Delete errror")
+            });
     }
+    const editComment = async (item) => {
+        // const testCollection = doc(db, "commentID", `${pathName}`, `${pathName}`, `${editingComment}`);
+        // if (editedContent !== undefined && editedContent !== "") {
+        //     await updateDoc(testCollection, {
+        //         comment: editedContent,
+        //         dateTime: date,
+        //     }).then((data) => {
+        //         checkComment();
+        //         setEditingComment(null)
+        //     }).catch((err) => {  })
+        // }
+        const filteredArray = comment1.current.filter(item1 => item1.idComment === item.idComment);
+        const db1 = getDatabase();
+        set(ref(db1, `commentID/${pathName}/${item.idComment}`), {
+            dateTime: filteredArray[0].dateTime,
+            idComment: filteredArray[0].idComment,
+            idUser: filteredArray[0].idUser,
+            name: filteredArray[0].name,
+            comment: editedContent,
+        })
+            .then(() => {
+                message.success("Update complete")
+                setEditingComment(null)
+            })
+            .catch((error) => {
+                message.error("Update errror")
+            });
+    }
+
+
+    // const starCountRef = ref(db, 'posts/' + postId + '/starCount');
+    // onValue(starCountRef, (snapshot) => {
+    //   const data = snapshot.val();
+    //   updateStarCount(postElement, data);
+    // });
+
+
+
+    // get(child(dbRef, dataPath)).then((snapshot) => {
+    //     if (snapshot.exists()) {
+    //         
+    //     } else {
+    //      
+    //     }
+    // }).catch((error) => {
+    //     console.error(error);
+    // });
+
     return (
         <div className='commentcompoments'>
             <h5>Comment</h5>
-
             {hasUser ?
                 <> <form onSubmit={submitComment}>
                     <p>Writing your thought</p>
@@ -186,8 +292,6 @@ export default function CommentComponent(props) {
                     {renderComment()}</> : <p className='text-red-600'>You need login to comments, <span className='cursor-pointer text-blue-600' onClick={() => {
                         showForm()
                     }}>here</span></p>}
-
-
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Warning</Modal.Title>
@@ -204,9 +308,6 @@ export default function CommentComponent(props) {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-
-
         </div >
     )
 }

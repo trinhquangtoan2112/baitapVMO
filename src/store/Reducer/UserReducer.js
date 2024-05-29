@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     userDetail: [],
     userLogin: [true],
-    hasUser: false
+    hasUser: false,
+    searching: []
 }
 
 export const userReducer = createSlice({
@@ -10,7 +11,7 @@ export const userReducer = createSlice({
     initialState,
     reducers: {
         getUserDetail: (state, action) => {
-            console.log(action, "action")
+
             state.userDetail = action.payload
             state.userLogin = false;
             state.hasUser = true;
@@ -31,11 +32,15 @@ export const userReducer = createSlice({
         },
         hideLoginForm: (state) => {
             state.userLogin = false;
+        },
+        setSearching: (state, payload) => {
+            state.searching = payload.payload;
+            console.log(state.searching);
         }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { getUserDetail, signOutDettail, showLoginForm, hideLoginForm, getUserFromLocalStorage } = userReducer.actions
+export const { getUserDetail, signOutDettail, showLoginForm, hideLoginForm, getUserFromLocalStorage, setSearching } = userReducer.actions
 
 export default userReducer.reducer

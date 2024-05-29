@@ -4,6 +4,7 @@ import SectionNewCompoment from '../../compoment/ContentCompoment/SectionNewComp
 import { getNewsForHomePage } from '../../service/getServiceNewspaper';
 import { useDispatch } from 'react-redux';
 import { getLoading, hideLoading } from '../../store/Reducer/LoadingReducer';
+import { message } from 'antd';
 
 export default function HomePage() {
     let result;
@@ -14,11 +15,17 @@ export default function HomePage() {
     const [newArray, setNewArray] = useState();
     const [sectionComponents1, setsectionComponents] = useState();
     useEffect(() => {
+        document.title = "The newspaper";
         const getNews = async () => {
             dispatch(getLoading())
-            result = await getNewsForHomePage();
-            setContent(result.data.response.results.slice(0, 7));
-            setNewArray(result.data.response.results.slice(6));
+            try {
+                result = await getNewsForHomePage();
+                setContent(result.data.response.results.slice(0, 7));
+                setNewArray(result.data.response.results.slice(6));
+            } catch (error) {
+                message.error("Something wrong here")
+            }
+
             dispatch(hideLoading())
 
         }

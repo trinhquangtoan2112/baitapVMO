@@ -3,15 +3,38 @@ import { NavLink, useParams } from 'react-router-dom'
 import { getNewsPaperFromSection } from '../../service/getServiceNewspaper';
 import { useDispatch } from 'react-redux';
 import { getLoading, hideLoading } from '../../store/Reducer/LoadingReducer';
+import PaginationComponent from './PaginationComponent';
+import { current } from '@reduxjs/toolkit';
+import { message } from 'antd';
 
 export default function SectionTypeComponents() {
     const params = useParams();
-    let { section } = params;
-    const [newsSection, setNewsSection] = useState();
-    const getData = async () => {
-        const result = await getNewsPaperFromSection(section);
+    const [page, setPage] = useState({
+        currentPage: 1,
+        totalPage: "",
+        pageSize: 50,
+    });
 
-        setNewsSection(result.data.response)
+
+    const [newsSection, setNewsSection] = useState();
+
+    let { section } = params;
+    const getData = async () => {
+        try {
+            const result = await getNewsPaperFromSection(section, page.currentPage);
+
+            setPage({
+                currentPage: result.data.response.currentPage,
+                totalPage: result.data.response.pages,
+                pageSize: 50
+            })
+
+            setNewsSection(result.data.response)
+
+        } catch (error) {
+            message.error("Somthing wrong here")
+        }
+
     }
     const dispatch = useDispatch();
     useEffect(() => {
@@ -23,6 +46,7 @@ export default function SectionTypeComponents() {
         }, 3000);
 
     }, [section])
+
     const testDemo = (textTest) => {
         if (textTest.length > 75) {
             textTest = textTest.slice(0, 60) + "...";
@@ -60,6 +84,7 @@ export default function SectionTypeComponents() {
                 <div className='section_content flex flex-row  flex-wrap'>
                     {renderNew()}
                 </div>
+                <PaginationComponent page={page} setPage={setPage} setNewsSection={setNewsSection} ></PaginationComponent>
             </div>
         </div>
     )

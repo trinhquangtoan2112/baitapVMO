@@ -8,15 +8,17 @@ import html2pdf from 'html2pdf.js';
 import { addDoc } from 'firebase/firestore';
 import { getLoading, hideLoading } from '../../store/Reducer/LoadingReducer';
 import { checkBookMark, checkDocs, saveBookMark } from '../../service/firebaseService';
+import dayjs from 'dayjs';
+import { message } from 'antd';
 export default function ReadingCompoment(props) {
     const userDetail = useSelector(state => state.UserReducer.userDetail)
-    console.log(userDetail)
+
     const [hasbookMark, setHasBookMark] = useState(false)
     const { response } = props.contentNew?.data;
     const { body } = response.content.blocks
     const { pathName } = props;
-    let path = pathName.replace(/\//g, "-")
-    console.log(path)
+    let path = pathName.replace(/\//g, "~")
+
     const documentTitle = () => {
         document.title = response.content.webTitle;
         window.scrollTo(0, 0);
@@ -57,7 +59,7 @@ export default function ReadingCompoment(props) {
     const pdfRef = useRef();
     const downloadPdf = () => {
         const input = pdfRef.current;
-        console.log(input);
+
         if (!input) {
             console.error("pdfRef is not defined or pointing to a valid element.");
             return;
@@ -94,7 +96,9 @@ export default function ReadingCompoment(props) {
         });
     }
     const bookmark = async () => {
+        let path1 = pathName.replace(/~/g, "/")
         const data = {
+            idWeb: path1,
             title: response?.content.webTitle,
             ...(
                 response?.content?.blocks?.main?.elements[0]?.assets[0]?.file
@@ -113,10 +117,16 @@ export default function ReadingCompoment(props) {
         getBookMarkList()
     }
     const getBookMarkList = async () => {
+        try {
+            const getBookmark = await checkDocs(userDetail.localId, path);
+            setHasBookMark(getBookmark)
+
+        } catch (error) {
+            message.error("Somthing wrong here")
+        }
+
         // const getBookmark = await checkBookMark(userDetail.localId);
-        const getBookmark = await checkDocs(userDetail.localId, path);
-        console.log(getBookmark, "getBookmark")
-        setHasBookMark(getBookmark)
+
     }
     useEffect(() => {
         getBookMarkList()
@@ -134,8 +144,9 @@ export default function ReadingCompoment(props) {
                         <p>By: {
                             response?.content.fields.byline
                         } </p>
-                        <p>Public at :{
-                            response?.content.webPublicationDate
+                        <p>Public at: {
+                            dayjs(response?.content.webPublicationDate).format("HH:mm " + "DD-MM-YYYY")
+
                         }</p>
                     </div>
                     <div className='img_info'>

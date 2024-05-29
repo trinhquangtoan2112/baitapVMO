@@ -1,14 +1,17 @@
 import { getAuth, onAuthStateChanged, sign, signOut } from 'firebase/auth';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, Outlet, useParams } from 'react-router-dom'
-import { showLoginForm, signOutDettail } from '../../store/Reducer/UserReducer';
+import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
+import { setSearching, showLoginForm, signOutDettail } from '../../store/Reducer/UserReducer';
 import { Database, getDatabase } from 'firebase/database';
+import { searchFromKeyWord } from '../../service/getServiceNewspaper';
+import { message } from 'antd';
 
 
 export default function Homelayout() {
     const detail = useSelector(state => state.UserReducer.userDetail);
     const params = useParams();
+
     const dispatch = useDispatch()
     const { section } = params;
     const auth = getAuth()
@@ -16,12 +19,49 @@ export default function Homelayout() {
         signOut(auth).then(() => {
             dispatch(signOutDettail())
         }).catch((err) => {
-            console.log(err);
+
         })
         localStorage.removeItem('userDetail');
     }
     const showForm = () => {
         dispatch(showLoginForm())
+    }
+    const [data, setData] = useState();
+    const [data1, setData1] = useState();
+    const [number, setNumber] = useState();
+    const refSeach = useRef();
+    const getData = async (e) => {
+        try {
+            const data = await searchFromKeyWord(e,);
+            setData(data?.data.response.results)
+            dispatch(setSearching(data.data.response.results))
+        } catch (error) {
+            message.error("Somthing wrong here")
+        }
+
+
+    }
+    const nav = useNavigate()
+    const searching = (e) => {
+        setData1(e.target.value)
+        if (refSeach.current) {
+            clearTimeout(refSeach.current)
+        }
+
+        refSeach.current = setTimeout(() => {
+            nav("/searching")
+            getData(e.target.value)
+        }, 3000)
+    }
+    const submit = () => {
+
+        if (refSeach.current) {
+            clearTimeout(refSeach.current)
+        }
+        nav("/searching")
+        refSeach.current = getData(data1)
+
+
     }
     return (
         <div className='home_main'>
@@ -31,7 +71,9 @@ export default function Homelayout() {
                 </h1>
                 <div className='tag_content'>
                     <hr></hr>
-                    <ul className='tag_main'>
+                    <ul className='tag_main' onClick={() => {
+                        setData1("")
+                    }}>
                         <li className={section === undefined ? "active" : ""}><NavLink to={""}>Home</NavLink></li>
                         <li className={section === "sport" ? "active" : ""}><NavLink to={"/content/sport"}>Sport</NavLink></li>
                         <li className={section === "world" ? "active" : ""}><NavLink to={"/content/world"}>World</NavLink></li>
@@ -42,16 +84,33 @@ export default function Homelayout() {
                     </ul>
                 </div>
                 <div className='login w-11/12 mx-auto text-right' >
-                    <NavLink className={"cursor-pointer"} to={"/searching"} >Seach</NavLink>
-                    <NavLink className={"cursor-pointer"}>
-                        {detail?.email ? <> <NavLink to={"/detail"}>{detail.email}</NavLink> <button onClick={() => {
+
+                    <div className={"cursor-pointer"}  >
+                        <div className="form">
+                            <i className="fa fa-search cursor-pointer" onClick={() => {
+                                submit()
+                            }} />
+                            <input onChange={(e) => {
+                                searching(e)
+                            }} value={data1} type="text"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        submit();
+                                    }
+                                }}
+                                className="form-control form-input" placeholder="Search anything..." />
+
+                        </div>
+                    </div>
+                    <div>
+                        {detail?.email ? <> <NavLink className={"cursor-pointer"} to={"/detail"}>{detail.email}</NavLink> <button onClick={() => {
                             signOutUser()
-                        }}>Sign Out</button> </> : <p onClick={() => {
+                        }}>Sign Out</button> </> : <p> <span className={"cursor-pointer"} onClick={() => {
                             showForm()
-                        }}>Sign in<i className="fa fa-user" />
+                        }}>Sign in <i className="fa fa-user" /></span>
                         </p>}
 
-                    </NavLink>
+                    </div>
                 </div>
             </section>
             <div className='w-11/12 mx-auto h-2/6'>
