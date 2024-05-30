@@ -30,8 +30,10 @@ import { getDatabase } from "firebase/database";
 
 // export const db = getFirestore(app);
 // export const realtimeDb = getDatabase(app)
+const FIRE_BASE_API_KEY = process.env.REACT_APP_FIRE_BASE_API_KEY;
+
 const firebaseConfig = {
-    apiKey: "AIzaSyCWCYD67005mJu2UnT_KIZf_-6rIY4zSAU",
+    apiKey: FIRE_BASE_API_KEY,
     authDomain: "thenewspaper-f7d17.firebaseapp.com",
     projectId: "thenewspaper-f7d17",
     storageBucket: "thenewspaper-f7d17.appspot.com",

@@ -11,6 +11,7 @@ import DetailComponents from './compoment/ContentCompoment/DetailComponents';
 import LoadingComponent from './compoment/LoadingComponents/LoadingComponent';
 import UserPage from './pages/UserPage/UserPage';
 import SearchComponents from './compoment/ContentCompoment/SearchComponents';
+import AppRoutes from './routes/RoutesIndex';
 function App() {
   return (
     <>
@@ -18,7 +19,7 @@ function App() {
       <SignInSignUpLayout />
       <BrowserRouter>
 
-        <Routes>
+        {/* <Routes>
           <Route path="" element={<Homelayout></Homelayout>} >
             <Route path="" element={<HomePage></HomePage>} ></Route>
             <Route path="/reading/*" element={<ReadingPages></ReadingPages>}></Route>
@@ -29,7 +30,11 @@ function App() {
           </Route>
 
 
-        </Routes>
+        </Routes> */}
+        <AppRoutes></AppRoutes>
+
+
+
       </BrowserRouter>
     </>
   );

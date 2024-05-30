@@ -14,21 +14,20 @@ export default function HomePage() {
     const [content, setContent] = useState();
     const [newArray, setNewArray] = useState();
     const [sectionComponents1, setsectionComponents] = useState();
+    const getNews = async () => {
+        dispatch(getLoading())
+        try {
+            result = await getNewsForHomePage();
+            setContent(result.data.response.results.slice(0, 7));
+            setNewArray(result.data.response.results.slice(6));
+        } catch (error) {
+            message.error("Something wrong here")
+        }
+        dispatch(hideLoading())
+    }
     useEffect(() => {
         document.title = "The newspaper";
-        const getNews = async () => {
-            dispatch(getLoading())
-            try {
-                result = await getNewsForHomePage();
-                setContent(result.data.response.results.slice(0, 7));
-                setNewArray(result.data.response.results.slice(6));
-            } catch (error) {
-                message.error("Something wrong here")
-            }
 
-            dispatch(hideLoading())
-
-        }
         getNews()
     }, []);
     useEffect(() => {

@@ -35,7 +35,7 @@ export const userReducer = createSlice({
         },
         setSearching: (state, payload) => {
             state.searching = payload.payload;
-            console.log(state.searching);
+
         }
     },
 })

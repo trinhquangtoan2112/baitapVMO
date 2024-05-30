@@ -23,6 +23,15 @@ export default function ReadingCompoment(props) {
         document.title = response.content.webTitle;
         window.scrollTo(0, 0);
     }
+    function copyToClipboard() {
+
+        const link = window.location.href
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(link);
+
+        // Alert the copied text
+        alert("Copied the link: " + link);
+    }
     const renderNewContent = () => {
 
         documentTitle()
@@ -169,8 +178,16 @@ export default function ReadingCompoment(props) {
                     <p></p>
                 </div>
             </div>
-            <button className='btn btn-primary' onClick={downloadPdf}>Download</button>
-            {hasbookMark || userDetail.length === 0 ? <button disabled className='btn btn-primary' onClick={bookmark}>Boorkmark</button> : <button className='btn btn-primary' onClick={bookmark}>Boorkmark</button>}
+            <div className=' flex flex-wrap flex-row justify-between' style={{ width: "8rem" }}>
+                <button className='btn btn-primary' onClick={downloadPdf}><i className="fa fa-download" />
+                </button>
+                {hasbookMark || userDetail.length === 0 ? <button disabled className='btn btn-primary' onClick={bookmark}><i className="fa fa-bookmark" />
+                </button> : <button className='btn btn-primary' onClick={bookmark}><i className="fa fa-bookmark" />
+                </button>}
+                <button className='btn btn-primary' onClick={() => { copyToClipboard() }}><i className="fa fa-clipboard" />
+                </button>
+            </div>
+
 
             <div className='w-full'><CommentComponent pathName={pathName}></CommentComponent></div>
 

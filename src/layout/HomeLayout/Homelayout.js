@@ -6,6 +6,7 @@ import { setSearching, showLoginForm, signOutDettail } from '../../store/Reducer
 import { Database, getDatabase } from 'firebase/database';
 import { searchFromKeyWord } from '../../service/getServiceNewspaper';
 import { message } from 'antd';
+import { getLoading, hideLoading } from '../../store/Reducer/LoadingReducer';
 
 
 export default function Homelayout() {
@@ -47,18 +48,21 @@ export default function Homelayout() {
         if (refSeach.current) {
             clearTimeout(refSeach.current)
         }
-
         refSeach.current = setTimeout(() => {
             nav("/searching")
             getData(e.target.value)
+            dispatch(hideLoading())
         }, 3000)
     }
     const submit = () => {
-
+        dispatch(getLoading())
         if (refSeach.current) {
             clearTimeout(refSeach.current)
         }
         nav("/searching")
+        setTimeout(() => {
+            dispatch(hideLoading())
+        }, [3000])
         refSeach.current = getData(data1)
 
 
