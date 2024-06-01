@@ -14,7 +14,6 @@ export default function UserPage() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const userDetail = useSelector(state => state.UserReducer.userDetail)
-
     const [listState, setListState] = useState();
     const dispatch = useDispatch()
     const getBookMarkList = async () => {
@@ -24,14 +23,10 @@ export default function UserPage() {
         } catch (error) {
             message.error("Some thing wrong here")
         }
-
     }
     useEffect(() => {
-
-    }, [])
-    useEffect(() => {
         getBookMarkList()
-        setTimeout(() => { dispatch(hideLoading()) }, 3000)
+        dispatch(hideLoading())
     }, [userDetail]);
     const renderList = () => {
         if (!listState) {

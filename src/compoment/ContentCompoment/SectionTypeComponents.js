@@ -14,36 +14,28 @@ export default function SectionTypeComponents() {
         totalPage: "",
         pageSize: 50,
     });
-
-
     const [newsSection, setNewsSection] = useState();
-
     let { section } = params;
+
     const getData = async () => {
         try {
+            dispatch(getLoading())
             const result = await getNewsPaperFromSection(section, page.currentPage);
-
             setPage({
                 currentPage: result.data.response.currentPage,
                 totalPage: result.data.response.pages,
                 pageSize: 50
             })
-
             setNewsSection(result.data.response)
-
+            dispatch(hideLoading())
         } catch (error) {
             message.error("Somthing wrong here")
         }
-
     }
     const dispatch = useDispatch();
     useEffect(() => {
-
-        dispatch(getLoading())
+        console.log("11111")
         getData()
-        setTimeout(() => {
-            dispatch(hideLoading())
-        }, 3000);
 
     }, [section])
 
@@ -67,7 +59,7 @@ export default function SectionTypeComponents() {
                 </div>
             }
             else {
-                return <div className='' key={index}>
+                return <div className='section_news' key={index}>
                     <NavLink to={`${item1.id}`}>
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTJiiwPeAByqPq0xaaE8py0UGtCpqot0U1rIb7mqwCAA&s" alt="Newest new from us"></img>
                         <h5>{testDemo(item1.webTitle)}</h5>
@@ -75,7 +67,6 @@ export default function SectionTypeComponents() {
                 </div>
             }
         })
-
     }
     return (
         <div>

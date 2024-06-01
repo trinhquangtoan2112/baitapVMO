@@ -1,0 +1,39 @@
+.dark-theme {
+    .main_content {
+        h4 {
+            @include styleText($font-size-2, $font-weight-1, $color-white-0);
+        }
+        .content {
+            .col-content {
+                a {
+                    h5 {
+                        @include styleText($font-size-4, $font-weight-2, $color-white-0);
+                    }
+
+                    &:hover {
+                        h5 {
+                            color: $color-blue-0;
+                        }
+                        .col_contentLeft_info {
+                            p {
+                                color: $color-blue-0;
+                            }
+                        }
+                    }
+                }
+            }
+            .col_content_left {
+                a {
+                    h5 {
+                        @include styleText($font-size-5, $font-weight-2, $color-white-0);
+                    }
+                    .col_contentLeft_info {
+                        p {
+                            @include styleText($font-size-4, $font-weight-2, $color-white-0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

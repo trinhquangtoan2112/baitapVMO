@@ -40,7 +40,6 @@ export const userReducer = createSlice({
     },
 })
 
-// Action creators are generated for each case reducer function
 export const { getUserDetail, signOutDettail, showLoginForm, hideLoginForm, getUserFromLocalStorage, setSearching } = userReducer.actions
 
 export default userReducer.reducer

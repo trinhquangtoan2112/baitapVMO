@@ -19,18 +19,7 @@ function App() {
       <SignInSignUpLayout />
       <BrowserRouter>
 
-        {/* <Routes>
-          <Route path="" element={<Homelayout></Homelayout>} >
-            <Route path="" element={<HomePage></HomePage>} ></Route>
-            <Route path="/reading/*" element={<ReadingPages></ReadingPages>}></Route>
-            <Route path="/searching" element={<SearchComponents></SearchComponents>}></Route>
-            <Route path="/searching/*" element={<SearchComponents></SearchComponents>}></Route>
-            <Route path="/detail" element={<UserPage></UserPage>}></Route>
-            <Route path="/content/:section" element={<SectionTypeComponents></SectionTypeComponents>}></Route>
-          </Route>
 
-
-        </Routes> */}
         <AppRoutes></AppRoutes>
 
 

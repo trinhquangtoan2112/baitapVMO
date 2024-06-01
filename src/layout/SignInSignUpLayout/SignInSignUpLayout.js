@@ -10,6 +10,8 @@ import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 export default function SignInSignUpLayout() {
+    const theme = useSelector(state => state.LoadingReducer.dark)
+
     const hidden = useSelector(state => state.UserReducer.userLogin);
     let userInformation = localStorage.getItem("userDetail");
     const auth = getAuth()
@@ -40,22 +42,24 @@ export default function SignInSignUpLayout() {
     }, [])
 
     return (
-        <div className={`loginn_form ${hidden ? "" : "hideen"}`}>
+        <div className={theme ? 'dark-theme' : ""}>
+            <div className={`loginn_form ${hidden ? "" : "hideen"}`}>
 
-            <div className='user_form'>
-                <Tabs
-                    defaultActiveKey="home"
-                    id="uncontrolled-tab-example"
-                    className="mb-3"
-                >
-                    <Tab eventKey="home" title="Sign In"  >
-                        <SignInComponents></SignInComponents>
-                    </Tab>
-                    <Tab eventKey="profile" title="Sign Up">
-                        <SignUpComponents></SignUpComponents>
-                    </Tab>
+                <div className='user_form'>
+                    <Tabs
+                        defaultActiveKey="home"
+                        id="uncontrolled-tab-example"
+                        className="mb-3"
+                    >
+                        <Tab eventKey="home" title="Sign In" className={theme ? 'text-white' : ""}  >
+                            <SignInComponents></SignInComponents>
+                        </Tab>
+                        <Tab eventKey="profile" title="Sign Up" className={theme ? 'text-white' : ""}>
+                            <SignUpComponents></SignUpComponents>
+                        </Tab>
 
-                </Tabs>
+                    </Tabs>
+                </div>
             </div>
         </div>
     );

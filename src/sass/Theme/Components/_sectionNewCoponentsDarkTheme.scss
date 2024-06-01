@@ -1,0 +1,22 @@
+.dark-theme {
+    .section_new {
+        border-bottom: 1px solid $color-gray-1;
+        a {
+            @include styleText($font-size-4, $font-weight-1, $color-white-0);
+        }
+        .section_content {
+            .section_news {
+                a {
+                    border-left: none;
+                    padding-left: 0px;
+                    h5 {
+                        @include styleText($font-size-4, $font-weight-1, $color-white-0);
+                    }
+                    p {
+                        @include styleText($font-size-6, $font-weight-2, $color-white-0);
+                    }
+                }
+            }
+        }
+    }
+}

@@ -8,7 +8,6 @@ export default function SearchComponents() {
     const dispatch = useDispatch()
     const data = useSelector(state => state.UserReducer.searching)
     const testDemo = (textTest) => {
-
         if (textTest.length > 75) {
             textTest = textTest.slice(0, 60) + "...";
             return textTest;
@@ -17,9 +16,8 @@ export default function SearchComponents() {
         }
     }
     useEffect(() => {
-        setTimeout(() => { dispatch(hideLoading()) }, 3000)
+        dispatch(hideLoading())
     }, []);
-
     const renderSearch = () => {
         return data?.map((item1, index) => {
             if (item1?.elements && item1?.elements !== undefined && item1?.elements !== "") {
@@ -40,18 +38,12 @@ export default function SearchComponents() {
                 </div>
             }
         })
-
     }
-
-
-
-
     return (
         <div>
             <div className="container">
                 <div className="row height d-flex justify-content-center align-items-center">
                     <div className="col-md-6">
-
                     </div>
                 </div>
             </div>

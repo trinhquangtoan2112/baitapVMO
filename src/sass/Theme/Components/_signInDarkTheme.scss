@@ -1,0 +1,14 @@
+.dark-theme {
+    .loginn_form {
+        .user_form {
+            background-color: $color-black-0;
+        }
+    }
+    .ck-editor__main {
+        .ck-content {
+            p {
+                word-wrap: anywhere;
+            }
+        }
+    }
+}

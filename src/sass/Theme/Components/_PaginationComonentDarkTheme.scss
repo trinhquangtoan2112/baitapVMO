@@ -1,0 +1,13 @@
+.dark-theme {
+    .pagination {
+        button {
+            color: $color-white-0;
+            border-color: #ca4f4f;
+            &.active {
+                border-color: $color-white-0;
+                background: #ffe400;
+                color: $color-white-0;
+            }
+        }
+    }
+}

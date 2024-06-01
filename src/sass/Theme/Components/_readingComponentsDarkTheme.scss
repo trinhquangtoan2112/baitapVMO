@@ -1,0 +1,45 @@
+.dark-theme {
+    .reading_content {
+        .reading-title {
+            .main_title {
+                @include styleText($font-size-7, $font-weight-1, $color-white-0);
+            }
+            .sub-title {
+                @include styleText($font-size-5, $font-weight-1, $color-white-0);
+            }
+            .content_info {
+                @include styleText($font-size-4, $font-weight-2, $color-white-0);
+            }
+            .img_info {
+                img {
+                    @extend %background-img;
+                }
+                p {
+                    @include styleText($font-size-4, $font-weight-2, $color-white-0);
+                }
+            }
+        }
+        .reading_content {
+            p {
+                @include styleText($font-size-4 + 5, $font-weight-2, $color-white-0);
+            }
+        }
+        .commentcompoments {
+            h5 {
+                border-top: 3px solid $color-red-0;
+                @include styleText($font-size-5, $font-weight-1, $color-white-0);
+            }
+
+            p:nth-child(3) {
+                @include styleText($font-size-4, $font-weight-1, $color-white-0);
+            }
+            .comment_content {
+                .comment_contetn_info {
+                    p {
+                        @include styleText($font-size-4, $font-weight-2, $color-white-0);
+                    }
+                }
+            }
+        }
+    }
+}

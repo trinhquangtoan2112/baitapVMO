@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import parse from 'html-react-parser';
 import CommentComponent from '../CommentComponent/CommentComponent';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import html2pdf from 'html2pdf.js';
@@ -12,24 +12,18 @@ import dayjs from 'dayjs';
 import { message } from 'antd';
 export default function ReadingCompoment(props) {
     const userDetail = useSelector(state => state.UserReducer.userDetail)
-
     const [hasbookMark, setHasBookMark] = useState(false)
     const { response } = props.contentNew?.data;
     const { body } = response.content.blocks
     const { pathName } = props;
     let path = pathName.replace(/\//g, "~")
-
     const documentTitle = () => {
         document.title = response.content.webTitle;
         window.scrollTo(0, 0);
     }
     function copyToClipboard() {
-
         const link = window.location.href
-        // Copy the text inside the text field
         navigator.clipboard.writeText(link);
-
-        // Alert the copied text
         alert("Copied the link: " + link);
     }
     const renderNewContent = () => {
@@ -74,13 +68,10 @@ export default function ReadingCompoment(props) {
             return;
         }
         html2canvas(input, {
-
             useCORS: true,
             allowTaint: true,
         }).then((canvas) => {
-
             const imgData = canvas.toDataURL('image/png');
-
             const pdf = new jsPDF('p', 'mm', 'a4', false);
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
@@ -129,13 +120,9 @@ export default function ReadingCompoment(props) {
         try {
             const getBookmark = await checkDocs(userDetail.localId, path);
             setHasBookMark(getBookmark)
-
         } catch (error) {
             message.error("Somthing wrong here")
         }
-
-        // const getBookmark = await checkBookMark(userDetail.localId);
-
     }
     useEffect(() => {
         getBookMarkList()
@@ -154,7 +141,7 @@ export default function ReadingCompoment(props) {
                             response?.content.fields.byline
                         } </p>
                         <p>Public at: {
-                            dayjs(response?.content.webPublicationDate).format("HH:mm " + "DD-MM-YYYY")
+                            dayjs(response?.content.webPublicationDate).format("HH:mm DD-MM-YYYY")
 
                         }</p>
                     </div>

@@ -51,34 +51,21 @@ export default function PaginationComponent(props) {
     const params = useParams();
     let { section } = params;
     useEffect(() => {
-        dispatch(getLoading())
         getData()
-        setTimeout(() => {
-            dispatch(hideLoading())
-        }, [5000])
         Paginaion()
     }, [page])
     const getData = async () => {
         window.scrollTo(0, 0)
-
+        dispatch(getLoading())
         try {
             const result = await getNewsPaperFromSection(section, page.currentPage);
             setNewsSection(result.data.response)
-
+            dispatch(hideLoading())
         } catch (error) {
             message.error("Somthing wrong here")
         }
-
-
-
-
     }
     const dispatch = useDispatch();
-    useEffect(() => {
-
-        Paginaion()
-
-    }, [])
 
     const renderPagination = () => {
         return pagination.map((pageNumber, index) => {

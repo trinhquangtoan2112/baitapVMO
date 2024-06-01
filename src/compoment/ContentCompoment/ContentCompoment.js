@@ -2,9 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 export default function ContentCompoment(props) {
-
     const { ContentArray } = props;
-
     const arrayRight = ContentArray?.slice(3)
     const renderRight = () => {
         return arrayRight.map((item, index) => {
@@ -24,7 +22,6 @@ export default function ContentCompoment(props) {
                     </NavLink>
                 </div>
             }
-
         })
     }
     const renderCompoment = () => {
@@ -65,16 +62,12 @@ export default function ContentCompoment(props) {
                     <div className='text-right'>
                         <NavLink>See more</NavLink>
                     </div>
-
                 </div>
             }
         } catch (error) {
-
         }
-
     }
     return (
         <>   {renderCompoment()}</>
-
     )
 }

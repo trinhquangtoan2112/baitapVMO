@@ -26,3 +26,61 @@
         }
     }
 }
+
+.dark-theme {
+    .loginn_form {
+        .user_form {
+            ul {
+                button.active {
+                    color: $color-white-0;
+                    background-color: $color-blue-0;
+                }
+                button {
+                    color: $color-white-0;
+                    background-color: $color-blue-1;
+                }
+            }
+            .tab-content {
+                input {
+                    border: 1px solid $color-white-0;
+                    background-color: $color-black-0;
+                    color: $color-white-0;
+                }
+            }
+        }
+    }
+}
+.dark-theme {
+    .ck-editor__main {
+        background-color: $color-black-0;
+        color: $color-white-0;
+        .ck {
+            background-color: $color-black-0;
+            color: $color-white-0;
+        }
+        .ck-editor__top {
+            background-color: $color-black-0;
+            .ck-toolbar {
+                background-color: $color-black-0;
+                .ck-toolbar__items {
+                    background-color: $color-black-0;
+                }
+            }
+        }
+        .ck-content {
+            p {
+                word-wrap: anywhere;
+            }
+        }
+    }
+}
+
+.dark-theme {
+    .ck .ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
+        background-color: $color-black-0;
+    }
+    .ck.ck-editor__main > .ck-editor__editable {
+        background-color: $color-black-0;
+        color: $color-white-0;
+    }
+}

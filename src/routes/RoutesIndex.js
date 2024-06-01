@@ -9,9 +9,9 @@ const AppRoutes = () => {
                     return <Route key={index} path={route.path} element={route.element} />;
                 })}
             </Route>
-            {ROUTES.map((route, index) => {
+            {/* {ROUTES.map((route, index) => {
                 return <Route key={index} path={route.path} element={route.element} />;
-            })}
+            })} */}
         </Routes>
     );
 };

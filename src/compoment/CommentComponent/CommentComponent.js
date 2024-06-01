@@ -16,12 +16,6 @@ import { message } from 'antd';
 export default function CommentComponent(props) {
     let { pathName } = props;
     pathName = pathName.replace(/\//g, "`")
-    useEffect(() => {
-        checkComment()
-    }, [])
-    useEffect(() => {
-        checkComment()
-    }, [pathName])
     const [show, setShow] = useState(false);
     const [editingComment, setEditingComment] = useState(null);
     const [editedContent, setEditedContent] = useState("");
@@ -40,20 +34,13 @@ export default function CommentComponent(props) {
     const showForm = () => {
         dispatch(showLoginForm())
     }
-    const checkComment = async () => {
-
-
-    }
     const comment1 = useRef();
-
     const lengthRef = useRef();
-
     const starCountRef = ref(realtimeDb, `commentID/${pathName}`);
     onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
         if (data === null || data === undefined) {
             lengthRef.current = 0;
-
         } else {
             const filteredData = Object.values(data).filter(val => val !== null && val !== undefined);
             const keys = Object.keys(data);
@@ -70,14 +57,10 @@ export default function CommentComponent(props) {
                     setComment(filteredData);
                 }
             }
-
-
-
         }
     });
     const submitComment = async (e) => {
         e.preventDefault();
-
         const db1 = getDatabase();
         set(ref(db1, `commentID/${pathName}/${lengthRef.current + 1}`), {
             comment: commentDetail,
@@ -86,47 +69,26 @@ export default function CommentComponent(props) {
             name: userDetail?.email,
             idComment: lengthRef.current + 1
         }).then(() => {
-            checkComment()
-            setCkValue("")
+            setCkValue(" ")
             setTimeout(() => {
                 setCkValue(true)
-            }, 1);
+            }, [1])
+
             message.success("Commet complete")
         }).catch(() => {
             message.success("Comment error")
         });
-        // const testCollection = collection(db, "commentID", `${pathName}`, `${pathName}`);
-        // if (commentDetail !== undefined) {
-        //     await addDoc(testCollection, {
-        //         comment: commentDetail,
-        //         dateTime: date,
-        //         idUser: userDetail?.localId,
-        //         name: userDetail?.email
-        //     }).then((data) => {
-        //         checkComment()
-        //         setCkValue("")
-
-        //         setTimeout(() => {
-        //             setCkValue(true)
-        //         }, 1);
-
-
-        //     }).catch((err) => {
-        //     })
-        // }
     }
     const handleEditClick = (item) => {
-
         setEditingComment(item.idComment);
         setEditedContent(item.comment);
     };
 
     const renderComment = () => {
         return comment?.map((item, index) => {
-
             const commentId = item.idComment;
             const isEditing = editingComment === commentId;
-            return <div className='comment_content mb-2' key={index}>
+            return <div className={`comment_content mb-2 ${theme ? "text-white" : ""}`} key={index}>
                 <div className='comment_contetn_info'>
                     <h4 className='comment_userName'>{item.name}</h4>
                     <p>Date time {item.dateTime}</p>
@@ -217,16 +179,6 @@ export default function CommentComponent(props) {
             });
     }
     const editComment = async (item) => {
-        // const testCollection = doc(db, "commentID", `${pathName}`, `${pathName}`, `${editingComment}`);
-        // if (editedContent !== undefined && editedContent !== "") {
-        //     await updateDoc(testCollection, {
-        //         comment: editedContent,
-        //         dateTime: date,
-        //     }).then((data) => {
-        //         checkComment();
-        //         setEditingComment(null)
-        //     }).catch((err) => {  })
-        // }
         const filteredArray = comment1.current.filter(item1 => item1.idComment === item.idComment);
         const db1 = getDatabase();
         set(ref(db1, `commentID/${pathName}/${item.idComment}`), {
@@ -244,26 +196,7 @@ export default function CommentComponent(props) {
                 message.error("Update errror")
             });
     }
-
-
-    // const starCountRef = ref(db, 'posts/' + postId + '/starCount');
-    // onValue(starCountRef, (snapshot) => {
-    //   const data = snapshot.val();
-    //   updateStarCount(postElement, data);
-    // });
-
-
-
-    // get(child(dbRef, dataPath)).then((snapshot) => {
-    //     if (snapshot.exists()) {
-    //         
-    //     } else {
-    //      
-    //     }
-    // }).catch((error) => {
-    //     console.error(error);
-    // });
-
+    const theme = useSelector(state => state.LoadingReducer.dark)
     return (
         <div className='commentcompoments'>
             <h5>Comment</h5>
@@ -275,12 +208,10 @@ export default function CommentComponent(props) {
                         config={{ placeholder: "Please enter your comment" }}
                         data={ckValue}
                         onReady={editor => {
-
                         }}
                         onChange={(_, editor) => setCommentDetail(editor.getData().trim())
                         }
                         onBlur={(event, editor) => {
-
                         }}
                         onFocus={(event, editor) => {
                             setEditingComment(null)

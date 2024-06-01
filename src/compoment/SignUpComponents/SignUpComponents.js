@@ -148,7 +148,6 @@ export default function SignUpComponents() {
                 </Button>
             </Form>
 
-            {/* <div className='basis-2/4'></div> */}
         </div>
 
     )

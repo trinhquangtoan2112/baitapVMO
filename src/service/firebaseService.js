@@ -28,7 +28,6 @@ export const saveBookMark = async (userID, articleID, data) => {
     const testCollection = doc(db, "UserBookMark", `${userID}`, `${userID}`, `${articleID}`);
     await setDoc(testCollection, data).then(() => {
         message.success("Successfully")
-
         return true;
     }).catch(() => {
         message.error
@@ -36,7 +35,6 @@ export const saveBookMark = async (userID, articleID, data) => {
         return false;
     })
 }
-
 export const deleteBookMark = async (userID, articleID) => {
     try {
         const bookmarkDoc = doc(db, "UserBookMark", `${userID}`, `${userID}`, `${articleID}`);
